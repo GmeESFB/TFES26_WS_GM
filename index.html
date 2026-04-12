@@ -126,7 +126,7 @@
           <select id="classSize"><option value="">Select&hellip;</option><option value="small (15 or fewer)">Small (15 or fewer)</option><option value="medium (16-25)">Medium (16-25)</option><option value="large (26+)">Large (26+)</option></select>
         </div>
         <div class="field-group"><label>Teaching language</label>
-          <select id="lang"><option value="English">English</option><option value="French">French</option><option value="German">German</option><option value="Dutch">Dutch</option><option value="Italian">Italian</option><option value="Spanish">Spanish</option><option value="Other">Other</option></select>
+          <select id="lang"><option value="Bulgarian">Bulgarian</option><option value="Croatian">Croatian</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="English" selected>English</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hungarian">Hungarian</option><option value="Irish">Irish</option><option value="Italian">Italian</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Maltese">Maltese</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Slovak">Slovak</option><option value="Slovenian">Slovenian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option></select>
         </div>
       </div>
       <div class="btn-row">
@@ -248,7 +248,7 @@
       <div class="chip" data-val="flag-misconceptions">Common misconceptions</div>
     </div>
     <div class="field-group"><label>Output language</label>
-      <select id="anLang"><option value="English">English</option><option value="French">French</option><option value="German">German</option><option value="same as source">Same as source</option></select></div>
+      <select id="anLang"><option value="same as source">Same as source</option><option value="Bulgarian">Bulgarian</option><option value="Croatian">Croatian</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="English">English</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hungarian">Hungarian</option><option value="Irish">Irish</option><option value="Italian">Italian</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Maltese">Maltese</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Slovak">Slovak</option><option value="Slovenian">Slovenian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option></select></div>
     <button class="btn btn-gold" onclick="generateAnalysis()">&#10024; Generate Analysis Prompt</button>
   </div>
   <div id="anOutput" style="display:none;margin-top:1rem;">
@@ -276,7 +276,7 @@
     <div class="field-group"><label>Subject</label><input type="text" id="qSubject" placeholder="e.g. Maths S3"></div>
     <div class="field-group"><label>Topic</label><input type="text" id="qTopic" placeholder="e.g. Pythagoras' theorem"></div>
     <div class="field-row">
-      <div class="field-group"><label>Language</label><select id="qLang"><option>English</option><option>French</option><option>German</option><option>Dutch</option><option>Spanish</option></select></div>
+      <div class="field-group"><label>Language</label><select id="qLang"><option value="Bulgarian">Bulgarian</option><option value="Croatian">Croatian</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="English" selected>English</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hungarian">Hungarian</option><option value="Irish">Irish</option><option value="Italian">Italian</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Maltese">Maltese</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Slovak">Slovak</option><option value="Slovenian">Slovenian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option></select></div>
       <div class="field-group"><label>Pathways</label><select id="qPaths"><option value="3">3 (Discovery/Standard/Expert)</option><option value="4" selected>4 (+ Autonomy)</option></select></div>
     </div>
     <button class="btn btn-gold" onclick="generateQuick()">&#9889; Generate</button>
@@ -295,7 +295,7 @@
   <div class="card">
     <div class="field-row">
       <div class="field-group"><label>Subject &amp; Level</label><input type="text" id="auSubject" placeholder="e.g. Chemistry S6"></div>
-      <div class="field-group"><label>Teaching Language</label><select id="auLang"><option>English</option><option>French</option><option>German</option><option>Dutch</option><option>Italian</option><option>Spanish</option><option>Other</option></select></div>
+      <div class="field-group"><label>Teaching Language</label><select id="auLang"><option value="Bulgarian">Bulgarian</option><option value="Croatian">Croatian</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="English" selected>English</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hungarian">Hungarian</option><option value="Irish">Irish</option><option value="Italian">Italian</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Maltese">Maltese</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Slovak">Slovak</option><option value="Slovenian">Slovenian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option></select></div>
     </div>
     <div class="field-group"><label>Topic / Unit</label><input type="text" id="auTopic" placeholder="e.g. Organic chemistry: reaction mechanisms"></div>
     <div class="field-group"><label>Course Code (optional)</label><input type="text" id="auCode" placeholder="e.g. C71, P52&hellip;"></div>
