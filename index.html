@@ -27,6 +27,8 @@
   #workshopTimer{left:0.5rem;right:0.5rem;width:auto;bottom:0;border-radius:var(--radius) var(--radius) 0 0;}
   .timer-round{font-size:0.67rem;}
   #timerDisplay{font-size:1.3rem;}
+  /* Push nav-footer above the fixed timer so links stay tappable */
+  .nav-footer{padding-bottom:56px;}
 }
 </style>
 </head>
@@ -198,6 +200,7 @@
       <div class="toggle-row"><div><div class="toggle-label">Frugal mode &#9851;&#65039;</div><div class="toggle-sublabel">Shorter prompt, lower token use, same core quality.</div></div><div class="toggle-switch" id="togFrugal" onclick="toggleSwitch(this)"></div></div>
       <div class="field-group" style="margin-top:0.8rem;"><label>AI Platform</label>
         <select id="platform"><option value="free">Free tier (ChatGPT, Copilot, Gemini&hellip;)</option><option value="pro">Pro / Plus (GPT-4o, Claude, etc.)</option></select></div>
+      <div class="field-group"><label>Output format</label><select id="buildFmt"><option value="md">Markdown (.md) &mdash; universal</option><option value="docx">Word document (.docx)</option><option value="pdf">PDF-ready</option></select></div>
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="goStep(3)">&larr; Back</button>
         <button class="btn btn-gold" onclick="goStep(5)">&#10024; Generate Workshop Prompt</button>
@@ -249,6 +252,7 @@
     </div>
     <div class="field-group"><label>Output language</label>
       <select id="anLang"><option value="same as source">Same as source</option><option value="Bulgarian">Bulgarian</option><option value="Croatian">Croatian</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="English">English</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hungarian">Hungarian</option><option value="Irish">Irish</option><option value="Italian">Italian</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Maltese">Maltese</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Slovak">Slovak</option><option value="Slovenian">Slovenian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option></select></div>
+    <div class="field-group"><label>Output format</label><select id="anFmt"><option value="md">Markdown (.md) &mdash; universal</option><option value="docx">Word document (.docx)</option><option value="pdf">PDF-ready</option></select></div>
     <button class="btn btn-gold" onclick="generateAnalysis()">&#10024; Generate Analysis Prompt</button>
   </div>
   <div id="anOutput" style="display:none;margin-top:1rem;">
@@ -279,6 +283,7 @@
       <div class="field-group"><label>Language</label><select id="qLang"><option value="Bulgarian">Bulgarian</option><option value="Croatian">Croatian</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="English" selected>English</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hungarian">Hungarian</option><option value="Irish">Irish</option><option value="Italian">Italian</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Maltese">Maltese</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Slovak">Slovak</option><option value="Slovenian">Slovenian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option></select></div>
       <div class="field-group"><label>Pathways</label><select id="qPaths"><option value="3">3 (Discovery/Standard/Expert)</option><option value="4" selected>4 (+ Autonomy)</option></select></div>
     </div>
+    <div class="field-group"><label>Output format</label><select id="qFmt"><option value="md">Markdown (.md) &mdash; universal</option><option value="docx">Word document (.docx)</option><option value="pdf">PDF-ready</option></select></div>
     <button class="btn btn-gold" onclick="generateQuick()">&#9889; Generate</button>
   </div>
   <div id="qOutput" style="display:none;margin-top:1rem;">
@@ -315,6 +320,7 @@
     <div class="toggle-row"><div><div class="toggle-label">Include learning contract template</div><div class="toggle-sublabel">Student defines objectives, timeline, and evidence of learning</div></div><div class="toggle-switch on" id="auContract" onclick="toggleSwitch(this)"></div></div>
     <div class="toggle-row"><div><div class="toggle-label">Include Bac-style practice question</div><div class="toggle-sublabel">With mark scheme and examiner tips</div></div><div class="toggle-switch on" id="auBacQ" onclick="toggleSwitch(this)"></div></div>
     <div class="toggle-row"><div><div class="toggle-label">Include metacognitive journal prompts</div><div class="toggle-sublabel">Weekly reflection questions for student growth tracking</div></div><div class="toggle-switch" id="auJournal" onclick="toggleSwitch(this)"></div></div>
+    <div class="field-group"><label>Output format</label><select id="auFmt"><option value="md">Markdown (.md) &mdash; universal</option><option value="docx">Word document (.docx)</option><option value="pdf">PDF-ready</option></select></div>
     <button class="btn btn-gold" style="margin-top:0.8rem;" onclick="generateAutonomy()">&#128992; Generate Autonomy Pathway Prompt</button>
   </div>
   <div id="auOutput" style="display:none;margin-top:1rem;">
@@ -355,6 +361,12 @@ function goStep(n){
 }
 function sel(id){return[...document.querySelectorAll('#'+id+' .chip.selected')].map(c=>c.dataset.val);}
 function v(id){return(document.getElementById(id)||{}).value?.trim()||'';}
+function fmtInstr(id){
+  const f=v(id);
+  if(f==='docx')return '\n=== DOCUMENT FORMAT ===\nProduce Word-document ready output: use clear Heading 1/2/3 structure, numbered lists, tables where useful. Optimised for paste into Word or Google Docs.\n';
+  if(f==='pdf')return '\n=== DOCUMENT FORMAT ===\nProduce PDF-ready output: clean titled sections, A4-optimised layout, print-friendly. Avoid complex nested tables.\n';
+  return '\n=== DOCUMENT FORMAT ===\nProduce Markdown-formatted output: ## headers, **bold**, bullet lists, tables with | pipes |. Ready to save as .md file.\n';
+}
 function generatePrompt(){
   const subject=v('subject')||'the subject',cycle=v('cycle')||'secondary',topic=v('topic')||'the topic',code=v('courseCode');
   const challenges=sel('challenges'),classSize=v('classSize'),lang=v('lang'),axes=sel('diffAxes');
@@ -394,6 +406,7 @@ function generatePrompt(){
   if(platform==='free')p+=`- FREE TIER: generate Discovery and Standard first, Expert${withAutonomy?' and Autonomy':''} in a follow-up.\n`;
   p+=`\n=== QUALITY SELF-CHECK ===\nVerify:\n[ ] Each pathway classroom-ready without additional editing\n[ ] Bloom's levels correctly targeted\n[ ] No hallucinated facts, formulas, or references\n[ ] Vocabulary age-appropriate for ${cycle}\n[ ] All pathways cover identical core content\n`;
   if(withAutonomy)p+=`[ ] Autonomy pathway promotes genuine independence\n`;
+  p+=fmtInstr('buildFmt');
   document.getElementById('promptText').textContent=p;
 }
 function showRefinements(){
@@ -422,6 +435,7 @@ function generateAnalysis(){
   goals.forEach((g,i)=>{if(goalMap[g])goalBlock+=`${i+1}. ${goalMap[g]}\n\n`;});
   if(isPro){
     let p=`You are an expert curriculum analyst for European Schools. Analyse this syllabus extract for ${subject}. Respond in ${lang}.\n\n=== SYLLABUS EXTRACT ===\n${syllabus}\n\n=== PART A: ANALYSIS ===\n${goalBlock}=== PART B: NEXT STEPS ===\n- Top 3 topics most in need of differentiation (ranked)\n- For #1 topic: a ready-to-use prompt to generate 4 differentiated pathways\n- Brief differentiation profile of this syllabus\n\n=== CONSTRAINTS ===\n- Specific to THIS syllabus, cite exact topics/objectives\n- Do not hallucinate content not in the extract\n`;
+    p+=fmtInstr('anFmt');
     document.getElementById('anPrompt1').textContent=p;
     document.getElementById('anOutputTitle').textContent='Complete Analysis Prompt (Pro)';
     document.getElementById('anOutputDesc').textContent='Pro models handle this in a single prompt. Copy and paste into your AI tool.';
@@ -429,6 +443,7 @@ function generateAnalysis(){
   }else{
     let p1=`You are an expert curriculum analyst for European Schools. Analyse this syllabus extract for ${subject}. Respond in ${lang}.\n\n=== SYLLABUS EXTRACT ===\n${syllabus}\n\n=== ANALYSIS ===\n${goalBlock}End with: the 3 topics most in need of differentiation (ranked).\nConstraint: do not invent content not in the extract.\n`;
     let p2=`Thank you. Now, for the #1 topic you identified:\n\nGenerate 4 differentiated learning pathways:\n- DISCOVERY (Bloom's: Remember/Understand) — simplified, scaffolded\n- STANDARD (Bloom's: Apply/Analyse) — curriculum-level\n- EXPERT (Bloom's: Analyse/Evaluate) — open-ended, critical thinking\n- AUTONOMY (Bloom's: Evaluate/Create) — self-directed, Bac prep\n\nFor each: learning objectives, activities, 3 exercises, "I can..." checklist.\nSame core content. Language: ${lang}. No hallucinated facts.\n`;
+    const fmtBlock=fmtInstr('anFmt');p1+=fmtBlock;p2+=fmtBlock;
     document.getElementById('anPrompt1').textContent=p1;
     document.getElementById('anPrompt2').textContent=p2;
     document.getElementById('anOutputTitle').textContent='Step 1: Analysis Prompt (Free tier)';
@@ -443,6 +458,7 @@ function generateQuick(){
   let p=`You are an expert teacher in ${s} at a European School. Create ${n} differentiated learning pathways for "${t}" in ${l}.\n\nDISCOVERY — Bloom's: Remember/Understand. Simplified language, visual scaffolds, sentence starters, guided exercises.\nSTANDARD — Bloom's: Apply/Analyse. Curriculum-level, balanced autonomy.\nEXPERT — Bloom's: Evaluate/Create. Open-ended, real-world connections.\n`;
   if(auto)p+=`AUTONOMY — Bloom's: Create. Self-directed study guide, investigation brief, learning contract, self-evaluation rubric. Bac preparation.\n`;
   p+=`\nFor each pathway: learning objectives, key content, 3 exercises, "I can..." checklist.\nConstraints: same core content across all pathways. No hallucinated facts. GDPR-compliant. Ready for classroom use.`;
+  p+=fmtInstr('qFmt');
   document.getElementById('qText').textContent=p;
   document.getElementById('qOutput').style.display='block';
   document.getElementById('qOutput').scrollIntoView({behavior:'smooth'});
@@ -462,6 +478,7 @@ function generateAutonomy(){
   if(journal)p+=`7. METACOGNITIVE JOURNAL PROMPTS (weekly)\n   - What did I learn? What strategy worked?\n   - What am I still unsure about? How will I address it?\n   - How does this connect to other topics or real life?\n\n`;
   p+=`=== CONSTRAINTS ===\n- Language: ${lang}\n- Align with European Schools syllabus for ${subject}${code?' ('+code+')':''}\n- GDPR: no real personal data in examples\n- No hallucinated references or statistics — flag uncertainty with [TO VERIFY]\n\n`;
   p+=`=== QUALITY CHECK ===\n[ ] Student can complete this with minimal teacher support\n[ ] Outcomes genuinely target Evaluate/Create (not just harder recall)\n[ ] Resources appropriate for S6-S7 independent study\n[ ] Self-evaluation rubric honest enough to detect poor work\n`;
+  p+=fmtInstr('auFmt');
   document.getElementById('auText').textContent=p;
   document.getElementById('auOutput').style.display='block';
   document.getElementById('auOutput').scrollIntoView({behavior:'smooth'});
